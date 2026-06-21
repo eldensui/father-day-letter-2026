@@ -213,6 +213,7 @@
     const musicText = document.getElementById('musicText');
     const HIGHLIGHT_START = 142;
     let unlocked = false;
+    let musicHasStarted = false;
 
     const base64ToBytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
     async function deriveKey(password, kdf) {
@@ -253,7 +254,7 @@
     function startMusic(fromHighlight = false) {
       if (fromHighlight && Number.isFinite(song.duration)) song.currentTime = Math.min(HIGHLIGHT_START, Math.max(0, song.duration - 4));
       song.volume = .72;
-      song.play().then(updateMusicButton).catch(() => { musicText.textContent = '点此播放音乐'; });
+      song.play().then(() => { musicHasStarted = true; updateMusicButton(); }).catch(() => { musicText.textContent = '点此播放音乐'; });
     }
     openLetter.addEventListener('click', async () => {
       if (unlocked) return;
@@ -267,8 +268,10 @@
         unlocked = true;
         opening.classList.add('is-gone');
         musicToggle.classList.add('is-visible');
-        // 解锁后首次点播放，仍保留手机浏览器的用户主动操作体验。
-        startMusic(true);
+        // 音乐必须由手机上的一次真实点击开始，才能稳定带声音播放。
+        const cueHighlight = () => { song.currentTime = Math.min(HIGHLIGHT_START, Math.max(0, song.duration - 4)); };
+        if (Number.isFinite(song.duration)) cueHighlight();
+        else song.addEventListener('loadedmetadata', cueHighlight, { once: true });
       } catch (error) {
         unlockHint.textContent = '密码不正确，或内容暂时无法加载，请再试一次。';
         openLetter.disabled = false;
@@ -276,7 +279,7 @@
       }
     });
     passwordInput.addEventListener('keydown', event => { if (event.key === 'Enter') openLetter.click(); });
-    musicToggle.addEventListener('click', () => song.paused ? startMusic(false) : song.pause());
+    musicToggle.addEventListener('click', () => song.paused ? startMusic(!musicHasStarted) : song.pause());
     song.addEventListener('play', updateMusicButton);
     song.addEventListener('pause', updateMusicButton);
     song.addEventListener('ended', updateMusicButton);
