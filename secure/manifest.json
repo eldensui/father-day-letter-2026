@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "kdf": {
+    "algorithm": "PBKDF2",
+    "hash": "SHA-256",
+    "iterations": 250000,
+    "salt": "XahmoQxE2gu88zfgn563dQ=="
+  },
+  "assets": [
+    {
+      "key": "heroVideo",
+      "file": "heroVideo.bin",
+      "mime": "video/mp4",
+      "iv": "QUnBVX0y1Z6pCroM",
+      "bytes": 561709
+    },
+    {
+      "key": "memoryVideo",
+      "file": "memoryVideo.bin",
+      "mime": "video/mp4",
+      "iv": "cFmvs4u2huMmtYAM",
+      "bytes": 1466258
+    },
+    {
+      "key": "song",
+      "file": "song.bin",
+      "mime": "audio/mpeg",
+      "iv": "cIQ/w8CjLdn5+r3c",
+      "bytes": 12756024
+    },
+    {
+      "key": "flowerPortrait",
+      "file": "flowerPortrait.bin",
+      "mime": "image/jpeg",
+      "iv": "EubmMlkPzC9DO3Ug",
+      "bytes": 291641
+    },
+    {
+      "key": "familyDinner",
+      "file": "familyDinner.bin",
+      "mime": "image/jpeg",
+      "iv": "cZsPHpSWQF6MpnOx",
+      "bytes": 321534
+    },
+    {
+      "key": "fatherAndChild",
+      "file": "fatherAndChild.bin",
+      "mime": "image/jpeg",
+      "iv": "92JHx3f9kNn2hZhW",
+      "bytes": 290833
+    },
+    {
+      "key": "travelSmile",
+      "file": "travelSmile.bin",
+      "mime": "image/jpeg",
+      "iv": "YGEJDg3hhHleUx5O",
+      "bytes": 298281
+    },
+    {
+      "key": "familyTravel",
+      "file": "familyTravel.bin",
+      "mime": "image/jpeg",
+      "iv": "8d44tmvHDnGFHwSN",
+      "bytes": 173004
+    },
+    {
+      "key": "familyTable",
+      "file": "familyTable.bin",
+      "mime": "image/jpeg",
+      "iv": "vxvz8Z+f9nxiXHpK",
+      "bytes": 260929
+    },
+    {
+      "key": "homeRest",
+      "file": "homeRest.bin",
+      "mime": "image/jpeg",
+      "iv": "sULrXJv0qej+0Qve",
+      "bytes": 296648
+    },
+    {
+      "key": "dailyTalk",
+      "file": "dailyTalk.bin",
+      "mime": "image/jpeg",
+      "iv": "d3MN+pLMQbRh1V0k",
+      "bytes": 242074
+    },
+    {
+      "key": "closePortrait",
+      "file": "closePortrait.bin",
+      "mime": "image/jpeg",
+      "iv": "udLFxWwdLmywyd8K",
+      "bytes": 165325
+    },
+    {
+      "key": "familyPortrait",
+      "file": "familyPortrait.bin",
+      "mime": "image/jpeg",
+      "iv": "+KbDuTXEXcwGIn+I",
+      "bytes": 268245
+    }
+  ]
+}

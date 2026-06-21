@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17140f">
+  <meta name="description" content="写给爸爸的一封影像信">
+  <title>写给爸爸的一封影像信</title>
+  <style>
+    :root { --ink:#1c1a17; --paper:#f4eee4; --warm:#d49a50; --line:rgba(28,26,23,.14); --dark:#17140f; }
+    * { box-sizing:border-box; }
+    html { background:var(--dark); scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:"Noto Serif SC","Songti SC",STSong,"Microsoft YaHei",serif; -webkit-font-smoothing:antialiased; }
+    button { font:inherit; }
+    .app { max-width:680px; min-height:100svh; margin:auto; overflow:hidden; background:var(--paper); }
+    .opening { position:fixed; z-index:30; inset:0; display:grid; place-items:center; padding:28px; color:#fffaf0; background:#17140f; transition:opacity .8s ease, visibility .8s ease; }
+    .opening.is-gone { opacity:0; visibility:hidden; pointer-events:none; }
+    .opening-inner { width:min(100%,380px); text-align:center; }
+    .opening-kicker,.eyebrow { margin:0; font:700 10px/1.4 Arial,sans-serif; letter-spacing:.22em; color:#e8bf81; }
+    .opening h1 { margin:26px 0 16px; font-size:clamp(45px,13vw,65px); font-weight:500; line-height:1.15; letter-spacing:.06em; }
+    .opening p:not(.opening-kicker) { margin:0 auto 34px; max-width:260px; color:rgba(255,250,240,.7); font-size:15px; line-height:1.9; }
+    .unlock-input { width:100%; margin:0 0 11px; border:1px solid rgba(242,211,160,.35); border-radius:2px; padding:16px 17px; color:#fff7e8; outline:none; background:rgba(255,255,255,.07); font:15px Arial,sans-serif; letter-spacing:.06em; }
+    .unlock-input::placeholder { color:rgba(255,250,240,.48); }
+    .open-btn { width:100%; border:1px solid rgba(242,211,160,.6); border-radius:2px; padding:18px 20px; color:#fff7e8; background:transparent; font-size:15px; letter-spacing:.13em; cursor:pointer; }
+    .open-btn:active { transform:scale(.98); background:rgba(255,255,255,.08); }
+    .unlock-hint { min-height:20px; margin:13px 0 0!important; color:#e8bf81!important; font-size:12px!important; line-height:1.6!important; }
+
+    .hero { position:relative; height:100svh; min-height:620px; overflow:hidden; color:#fffaf0; background:#15130f; }
+    .hero-video,.hero::after { position:absolute; inset:0; width:100%; height:100%; }
+    .hero-video { object-fit:cover; object-position:center; }
+    .hero::after { content:""; background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.05) 34%,rgba(0,0,0,.84) 100%); pointer-events:none; }
+    .hero-content { position:absolute; z-index:1; right:0; bottom:0; left:0; padding:max(26px,env(safe-area-inset-bottom)) 27px 37px; }
+    .hero .eyebrow { margin-bottom:18px; }
+    .hero h1 { margin:0; font-size:clamp(44px,12.7vw,72px); font-weight:500; letter-spacing:.055em; line-height:1.16; text-shadow:0 2px 22px rgba(0,0,0,.35); }
+    .hero-note { margin:21px 0 0; color:rgba(255,250,240,.83); font-size:15px; line-height:1.8; letter-spacing:.04em; }
+    .scroll-mark { margin:32px 0 0; font:10px Arial,sans-serif; letter-spacing:.18em; color:rgba(255,255,255,.64); }
+
+    .section { padding:74px 26px; }
+    .section h2 { margin:17px 0 0; font-size:clamp(31px,8vw,43px); font-weight:500; line-height:1.35; letter-spacing:.025em; }
+    .body-copy { margin:25px 0 0; font-size:17px; line-height:2; color:#514b43; }
+    .body-copy + .body-copy { margin-top:12px; }
+    .photo { display:block; width:100%; object-fit:cover; background:#d8d1c6; }
+    .portrait { aspect-ratio:4/5; }
+    .landscape { aspect-ratio:4/3; }
+    .caption { margin:10px 1px 0; color:#8b7c69; font-size:12px; line-height:1.7; }
+
+    .portrait-story { padding:72px 0 0; background:#ebe1d1; }
+    .portrait-story .story-copy { padding:0 26px 42px; }
+    .photo-block { position:relative; }
+    .photo-block .photo { height:min(138vw,740px); object-position:center; }
+    .photo-quote { position:absolute; right:20px; bottom:22px; left:20px; margin:0; color:#fffaf0; font-size:19px; line-height:1.75; text-shadow:0 2px 16px rgba(0,0,0,.7); }
+    .photo-block::after { content:""; position:absolute; inset:45% 0 0; background:linear-gradient(transparent,rgba(0,0,0,.6)); pointer-events:none; }
+    .photo-quote { z-index:1; }
+
+    .traits { padding:72px 26px 67px; }
+    .trait { display:grid; grid-template-columns:55px 1fr; gap:14px; padding:26px 0; border-top:1px solid var(--line); }
+    .trait:last-child { border-bottom:1px solid var(--line); }
+    .trait-number { padding-top:5px; font:700 10px Arial,sans-serif; letter-spacing:.14em; color:#bb803c; }
+    .trait h3 { margin:0; font-size:23px; font-weight:500; letter-spacing:.03em; }
+    .trait p { margin:10px 0 0; font-size:15px; line-height:1.85; color:#635b51; }
+
+    .family { padding:69px 16px; color:#fffaf0; background:#1d1a15; }
+    .family-head { padding:0 10px 32px; }
+    .family h2 { margin:17px 0 0; font-size:clamp(30px,8vw,43px); font-weight:500; line-height:1.35; }
+    .family .body-copy { color:rgba(255,250,240,.74); }
+    .grid { display:grid; grid-template-columns:1.02fr .98fr; gap:8px; }
+    .grid .photo { height:210px; }
+    .grid .tall { grid-row:span 2; height:428px; object-position:59% center; }
+    .grid .wide { object-position:center 52%; }
+    .grid .bottom { object-position:center; }
+    .family-note { margin:19px 11px 0; color:rgba(255,250,240,.62); font-size:12px; line-height:1.7; }
+
+    .video-section { padding:76px 26px; background:#f8f4ed; }
+    .video-frame { position:relative; margin-top:31px; overflow:hidden; background:#13110e; aspect-ratio:9/14; }
+    .video-frame video { display:block; width:100%; height:100%; object-fit:cover; }
+    .video-label { position:absolute; right:14px; bottom:14px; left:14px; margin:0; padding:14px 15px; color:#fffaf0; background:linear-gradient(90deg,rgba(0,0,0,.6),transparent); font-size:14px; line-height:1.55; pointer-events:none; }
+
+    .little-things { padding:72px 16px; background:#e6d7c2; }
+    .little-things-head { padding:0 10px 29px; }
+    .little-things h2 { margin:17px 0 0; font-size:clamp(30px,8vw,43px); font-weight:500; line-height:1.35; }
+    .little-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .little-grid .photo { height:225px; }
+    .little-grid .wide-photo { grid-column:span 2; height:275px; object-position:center 41%; }
+    .little-grid .portrait-photo { object-position:center; }
+
+    .letter { padding:84px 27px 89px; color:#fffaf0; background:#aa7440; }
+    .letter .eyebrow { color:#f9daa4; }
+    .letter h2 { margin:18px 0 0; font-size:clamp(33px,8.8vw,49px); font-weight:500; line-height:1.38; }
+    .letter p { margin:27px 0 0; color:rgba(255,250,240,.91); font-size:17px; line-height:2; }
+    .letter .sign { margin-top:36px; font-size:17px; letter-spacing:.08em; }
+    .letter small { display:block; margin-top:9px; font:10px Arial,sans-serif; letter-spacing:.2em; color:rgba(255,250,240,.65); }
+
+    .music-toggle { position:fixed; z-index:20; right:max(17px,env(safe-area-inset-right)); bottom:max(17px,env(safe-area-inset-bottom)); display:flex; align-items:center; gap:9px; border:0; border-radius:999px; padding:13px 15px; color:#fffaf0; background:rgba(24,21,17,.9); box-shadow:0 8px 24px rgba(0,0,0,.26); font:700 12px Arial,sans-serif; letter-spacing:.06em; cursor:pointer; opacity:0; pointer-events:none; transform:translateY(14px); transition:.35s ease; }
+    .music-toggle.is-visible { opacity:1; pointer-events:auto; transform:translateY(0); }
+    .music-dot { width:8px; height:8px; border-radius:50%; background:#dca759; }
+    .music-toggle.is-playing .music-dot { animation:pulse 1.1s ease-in-out infinite; }
+    @keyframes pulse { 50% { box-shadow:0 0 0 6px rgba(220,167,89,0); transform:scale(.78); } }
+    footer { padding:24px; color:#8e806e; background:#f4eee4; text-align:center; font:10px Arial,sans-serif; letter-spacing:.13em; }
+    @media (min-width:681px) { body { background:#d6cec2; } .app { box-shadow:0 0 50px rgba(0,0,0,.13); } }
+    @media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <div class="opening" id="opening">
+    <div class="opening-inner">
+      <p class="opening-kicker">FATHER'S DAY · 2026</p>
+      <h1>爸爸，<br>请收下这封信。</h1>
+      <p>这封信只写给家人。输入密码，慢慢打开。</p>
+      <input class="unlock-input" id="passwordInput" type="password" autocomplete="current-password" placeholder="请输入访问密码" aria-label="访问密码">
+      <button class="open-btn" id="openLetter" type="button">解锁这封信</button>
+      <p class="unlock-hint" id="unlockHint" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <main class="app">
+    <section class="hero" aria-label="写给爸爸的一封影像信">
+      <video class="hero-video" data-secure="heroVideo" autoplay muted loop playsinline preload="none"></video>
+      <div class="hero-content">
+        <p class="eyebrow">FATHER'S DAY · 2026</p>
+        <h1>这，是我的爸爸。</h1>
+        <p class="hero-note">和蔼、严厉、孝顺，<br>还有一点让人又爱又笑的啰嗦。</p>
+        <p class="scroll-mark">往下读完这封信</p>
+      </div>
+    </section>
+
+    <section class="portrait-story">
+      <div class="story-copy">
+        <p class="eyebrow">01 / 他很和蔼</p>
+        <h2>笑起来的时候，<br>家就松弛下来了。</h2>
+        <p class="body-copy">您总是那个把气氛安住的人。家人围在一起时，您不一定说很多漂亮话，却总能用一个笑、一个玩笑，让大家觉得：回家真好。</p>
+      </div>
+      <div class="photo-block">
+        <img class="photo" data-secure="flowerPortrait" alt="爸爸站在老家门前的油菜花里">
+        <p class="photo-quote">“原来最让人安心的，<br>就是您一直都在。”</p>
+      </div>
+    </section>
+
+    <section class="traits">
+      <p class="eyebrow">02 / 我眼里的您</p>
+      <h2>有些性格，<br>长大后才读懂。</h2>
+      <article class="trait"><div class="trait-number">01</div><div><h3>严厉，是因为在意</h3><p>以前总觉得您要求很多。后来才懂，您不是要我活得紧绷，而是希望我有能力，稳稳地走好自己的路。</p></div></article>
+      <article class="trait"><div class="trait-number">02</div><div><h3>啰嗦，是牵挂的形状</h3><p>“好好吃饭”“路上慢点”“别太累”——您反复说的那些话，后来成了我离开家以后，最想听见的声音。</p></div></article>
+      <article class="trait"><div class="trait-number">03</div><div><h3>孝顺，是您教我的课</h3><p>您把照顾长辈、惦记家人这些事，做得很自然。您没有把道理挂在嘴边，却把“家”这个字，做给我看。</p></div></article>
+    </section>
+
+    <section class="family">
+      <div class="family-head">
+        <p class="eyebrow">03 / 家的方向</p>
+        <h2>您把孝顺，<br>留在每一次团聚里。</h2>
+        <p class="body-copy">一顿饭、一张合影、一次陪伴。您总是记得谁爱吃什么，也总会把长辈的事放在心上。原来这就是您最朴实、也最有力量的榜样。</p>
+      </div>
+      <div class="grid">
+        <img class="photo tall" data-secure="familyPortrait" alt="爸爸和家人陪伴长辈合影">
+        <img class="photo wide" data-secure="familyDinner" alt="爸爸与家人围坐吃饭">
+        <img class="photo bottom" data-secure="familyTable" alt="家人围坐在团圆饭桌旁">
+      </div>
+      <p class="family-note">照片里的每一次相聚，都是您默默守住的“家”。</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">04 / 也有轻松的时候</p>
+      <h2>在您身边，<br>我们永远可以做孩子。</h2>
+      <p class="body-copy">您总爱叮嘱，也总爱笑。那些最寻常的瞬间，现在回头看，原来都是以后会反复想起的温暖。</p>
+      <img class="photo landscape" style="margin-top:30px;object-position:center" data-secure="fatherAndChild" alt="爸爸和孩子坐在一起微笑">
+      <p class="caption">您在，便是很踏实的日常。</p>
+    </section>
+
+    <section class="video-section">
+      <p class="eyebrow">05 / 一段正在发生的记忆</p>
+      <h2>有些话不用急着说，<br>陪伴本身就是回答。</h2>
+      <div class="video-frame">
+        <video data-secure="memoryVideo" controls playsinline preload="none"></video>
+        <p class="video-label">点开看看，这一段属于我们家的日常。</p>
+      </div>
+    </section>
+
+    <section class="little-things">
+      <div class="little-things-head">
+        <p class="eyebrow">06 / 还有这些小瞬间</p>
+        <h2>原来您认真生活的样子，<br>我都偷偷存下来了。</h2>
+      </div>
+      <div class="little-grid">
+        <img class="photo wide-photo" data-secure="travelSmile" alt="爸爸在旅行中笑得很开心">
+        <img class="photo portrait-photo" data-secure="dailyTalk" alt="爸爸与家人交谈的日常瞬间">
+        <img class="photo portrait-photo" data-secure="familyTravel" alt="爸爸与家人和长辈的旅行合影">
+        <img class="photo wide-photo" data-secure="homeRest" alt="爸爸和家人在家中休息的温暖瞬间">
+        <img class="photo wide-photo" data-secure="closePortrait" alt="爸爸近距离的生活记录">
+      </div>
+      <p class="caption" style="margin:16px 10px 0">不只是重要时刻，连这些很普通的日子，也都是我珍藏的关于您。</p>
+    </section>
+
+    <section class="letter">
+      <p class="eyebrow">07 / 想对您说</p>
+      <h2>爸爸，<br>谢谢您做我的底气。</h2>
+      <p>谢谢您的和蔼，让我知道家可以很温暖；谢谢您的严厉，让我学会认真地面对生活；谢谢您的孝顺，让我看见一个人怎样把责任放在心上。</p>
+      <p>也谢谢您的“啰嗦”。那些听起来最平常的话，都是您最不擅长表达、却最深的爱。</p>
+      <p>以后换我多陪陪您，多听您说说话，也多让您放心。愿您少一些操心，多一些轻松；愿每一个平常的日子，都有家人围在身边。</p>
+      <div class="sign">父亲节快乐，爸爸。<small>爱您的孩子</small></div>
+    </section>
+    <footer>FOR THE MAN WHO TAUGHT ME HOW TO WALK</footer>
+  </main>
+
+  <audio id="fatherSong" data-secure="song" preload="none"></audio>
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="播放或暂停背景音乐"><span class="music-dot"></span><span id="musicText">播放音乐</span></button>
+
+  <script>
+    const song = document.getElementById('fatherSong');
+    const opening = document.getElementById('opening');
+    const openLetter = document.getElementById('openLetter');
+    const passwordInput = document.getElementById('passwordInput');
+    const unlockHint = document.getElementById('unlockHint');
+    const musicToggle = document.getElementById('musicToggle');
+    const musicText = document.getElementById('musicText');
+    const HIGHLIGHT_START = 142;
+    let unlocked = false;
+
+    const base64ToBytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
+    async function deriveKey(password, kdf) {
+      const passwordKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: base64ToBytes(kdf.salt), iterations: kdf.iterations, hash: kdf.hash },
+        passwordKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['decrypt']
+      );
+    }
+    async function unlockAssets(password) {
+      const manifest = await fetch('secure/manifest.json', { cache: 'no-store' }).then(response => {
+        if (!response.ok) throw new Error('manifest');
+        return response.json();
+      });
+      const key = await deriveKey(password, manifest.kdf);
+      const objectUrls = new Map();
+      for (const asset of manifest.assets) {
+        const encrypted = await fetch(`secure/${asset.file}`, { cache: 'no-store' }).then(response => response.arrayBuffer());
+        const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: base64ToBytes(asset.iv) }, key, encrypted);
+        objectUrls.set(asset.key, URL.createObjectURL(new Blob([plain], { type: asset.mime })));
+      }
+      document.querySelectorAll('[data-secure]').forEach(element => {
+        const source = objectUrls.get(element.dataset.secure);
+        if (source) element.src = source;
+      });
+      document.querySelectorAll('video[data-secure]').forEach(video => video.load());
+      const hero = document.querySelector('.hero-video');
+      hero.play().catch(() => {});
+    }
+    function updateMusicButton() {
+      const playing = !song.paused;
+      musicToggle.classList.toggle('is-playing', playing);
+      musicText.textContent = playing ? '暂停音乐' : '播放音乐';
+    }
+    function startMusic(fromHighlight = false) {
+      if (fromHighlight && Number.isFinite(song.duration)) song.currentTime = Math.min(HIGHLIGHT_START, Math.max(0, song.duration - 4));
+      song.volume = .72;
+      song.play().then(updateMusicButton).catch(() => { musicText.textContent = '点此播放音乐'; });
+    }
+    openLetter.addEventListener('click', async () => {
+      if (unlocked) return;
+      const password = passwordInput.value.trim();
+      if (!password) { unlockHint.textContent = '请输入爸爸也知道的访问密码。'; return; }
+      openLetter.disabled = true;
+      openLetter.textContent = '正在打开…';
+      unlockHint.textContent = '正在解锁家里的影像，请稍等一下。';
+      try {
+        await unlockAssets(password);
+        unlocked = true;
+        opening.classList.add('is-gone');
+        musicToggle.classList.add('is-visible');
+        // 解锁后首次点播放，仍保留手机浏览器的用户主动操作体验。
+        startMusic(true);
+      } catch (error) {
+        unlockHint.textContent = '密码不正确，或内容暂时无法加载，请再试一次。';
+        openLetter.disabled = false;
+        openLetter.textContent = '解锁这封信';
+      }
+    });
+    passwordInput.addEventListener('keydown', event => { if (event.key === 'Enter') openLetter.click(); });
+    musicToggle.addEventListener('click', () => song.paused ? startMusic(false) : song.pause());
+    song.addEventListener('play', updateMusicButton);
+    song.addEventListener('pause', updateMusicButton);
+    song.addEventListener('ended', updateMusicButton);
+  </script>
+</body>
+</html>
